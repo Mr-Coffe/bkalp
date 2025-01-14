@@ -12,47 +12,46 @@
     <script>
         const canvas = document.getElementById('kalpCanvas');
         const ctx = canvas.getContext('2d');
-         ctx.translate(canvas.width / 2, canvas.height / 2);
-        ctx.scale(1, -1)
+        ctx.translate(canvas.width / 2, canvas.height / 2); // Merkezi orijine taşı
+        ctx.scale(1, -1); // Y eksenini ters çevir (kalp yukarı baksın)
+
         const points = [];
         let currentPointIndex = 0;
 
-
         function xt(t) {
-          return 16 * Math.sin(t) ** 3;
+            return 16 * Math.sin(t) ** 3;
         }
 
         function yt(t) {
-          return 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+            return 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
         }
 
         // Kalp noktalarını önceden hesapla
-         for (let i = 0; i < 2500; i++) {
-            const x = xt(i) * 20;
-            const y = yt(i) * 20;
+        for (let i = 0; i < 2500; i++) {
+            const x = xt(i * 0.005) * 20; // t değerini küçülterek noktalar arası mesafeyi arttırdım ve daha düzgün çizgi oldu
+            const y = yt(i * 0.005) * 20;
             points.push({ x, y });
         }
 
         function drawFrame() {
-            if (currentPointIndex >= points.length -1) {
-                 return; // Eğer tüm noktalar çizilmişse çizimi durdur
+            if (currentPointIndex >= points.length - 1) {
+                return; // Eğer tüm noktalar çizilmişse çizimi durdur
             }
-            
-           ctx.strokeStyle = 'red';
-           ctx.lineWidth = 2;
-           ctx.beginPath();
+
+            ctx.strokeStyle = 'pink'; // Çizgi rengini pembe yaptım
+            ctx.lineWidth = 2;
+            ctx.beginPath();
             if (currentPointIndex === 0) {
                 ctx.moveTo(points[0].x, points[0].y);
             } else {
-            ctx.moveTo(points[currentPointIndex -1].x, points[currentPointIndex -1].y);
+                ctx.moveTo(points[currentPointIndex - 1].x, points[currentPointIndex - 1].y);
             }
 
             ctx.lineTo(points[currentPointIndex].x, points[currentPointIndex].y);
             ctx.stroke();
 
-
-             currentPointIndex++;
-             requestAnimationFrame(drawFrame); // Sonraki kareyi çizmek için tekrar çağır
+            currentPointIndex++;
+            requestAnimationFrame(drawFrame); // Sonraki kareyi çizmek için tekrar çağır
         }
 
         drawFrame(); // Çizime başla
